@@ -16,28 +16,19 @@ fun MainApp(){
 		navController = navController,
 		startDestination = Route.ScannerScreen,
 	) {
-
 		composable<Route.ScannerScreen> {
 			ScannerScreen(
-				onClick = { navController.popBackStack()}
+				onBackClick = { navController.popBackStack()}
 			)
 		}
-		composable<Route.PrefectureDetail>(
-			enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-			exitTransition = null,
-			popEnterTransition = null,
-			popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
-		) { navBackStackEntry ->
-			val prefectureDetail: Route.PrefectureDetail
-					= navBackStackEntry.toRoute()
-			PrefectureDetailScreen(
-				prefectureName = prefectureDetail.name,
-				onBackClick = { navController.popBackStack() },
-				onOpenWikiClick = { wikiUrl ->
-					navController.navigate(
-						Route.WikiView(url = wikiUrl)
-					)
-				}
+		composable<Route.PrintHistoryScreen> {
+			ScannerScreen(
+				onBackClick = { navController.popBackStack()}
+			)
+		}
+		composable<Route.ProdInfoScreen> {
+			ScannerScreen(
+				onBackClick = { navController.popBackStack()}
 			)
 		}
 	}
@@ -48,12 +39,12 @@ object Route {
 	data object ScannerScreen
 
 	@Serializable
-	data class PrefectureDetail(
+	data class PrintHistoryScreen(
 		val name: String
 	)
 
 	@Serializable
-	data class WikiView(
+	data class ProdInfoScreen(
 		val url: String
 	)
 }

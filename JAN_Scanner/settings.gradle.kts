@@ -7,14 +7,22 @@ pluginManagement {
 				includeGroupByRegex("androidx.*")
 			}
 		}
+		gradlePluginPortal().content {
+			includeGroupAndSubgroups("com.github.ben-manes")
+		}
 		mavenCentral()
-		gradlePluginPortal()
+		//gradlePluginPortal()
 	}
 }
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
 	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 	repositories {
-		google()
+		google().content {
+			includeGroupAndSubgroups("com.android")
+			includeGroupAndSubgroups("com.google")
+			includeGroupAndSubgroups("androidx")
+		}
 		mavenCentral()
 	}
 }
