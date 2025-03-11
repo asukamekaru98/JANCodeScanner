@@ -15,6 +15,7 @@
     </queries>
 
     <application
+        android:name=".scanner.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -34,6 +35,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.websarva.wings.android.jan_scanner.scanner.BarcodeScannerActivity"
+            android:exported="true"
+            android:label="@string/title_activity_barcode_scanner"
+            android:theme="@style/Theme.CodeReader">
+
         </activity>
     </application>
 

@@ -1,5 +1,7 @@
 <resources>
+    <!--Activity-->
     <string name="app_name">JAN_Scanner</string>
+    <string name="title_activity_barcode_scanner">バーコードスキャナ</string>
 
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
