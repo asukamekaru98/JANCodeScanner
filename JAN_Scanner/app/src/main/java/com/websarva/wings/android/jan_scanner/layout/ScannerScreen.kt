@@ -1,9 +1,10 @@
 package com.websarva.wings.android.jan_scanner.layout
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -18,14 +19,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.websarva.wings.android.jan_scanner.R
 import com.websarva.wings.android.jan_scanner.scanner.BarcodeScannerActivity
+import kotlinx.coroutines.launch
+
+enum class BottomTab(val value: Int){
+	HOME(0),
+	HISTORY(1),
+	SETTING(2),
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,61 +51,10 @@ fun ScannerScreen(
 	onBackClick: () -> Unit,
 ) {
 
-	// 選択したタブのインデックスを保存する変数
-	var selectedBottomTab by remember {
-		mutableIntStateOf(0)
-	}
 
-	Scaffold(
-		topBar = {
-			TopAppBar(
-				title = {
-					Text("スキャン")
-				},
-				navigationIcon = {
-					IconButton(onClick = onBackClick) {
-						Icon(
-							painter = painterResource(R.drawable.arrow_back),
-							contentDescription = "戻る"
-						)
-					}
-				}
-			)
-		},
-		bottomBar = {
-			NavigationBar {
-				bottomNavItems.forEachIndexed { index, bottomNavItem ->
-					NavigationBarItem(
-						selected = (index == selectedBottomTab),
-						onClick = {
-							selectedBottomTab = index
-						},
-						icon = {
-							Icon(
-								if(index == selectedBottomTab){
-									bottomNavItem.selectedIcon
-								} else{
-									bottomNavItem.unSelectedIcon
-								},
-								contentDescription = bottomNavItem.title
-							)
-						},
-						label = {
-							Text(
-								text = bottomNavItem.title
-							)
-						}
-
-					)
-				}
-			}
-		},
-	) { innerPadding ->
-		ScannerCamera(
-			modifier = Modifier.padding(innerPadding)
-		)
-	}
 }
+
+
 
 @Preview
 @Composable
@@ -104,12 +64,11 @@ private fun ScannerCamera(
 	val context = LocalContext.current
 	val intent = Intent(context, BarcodeScannerActivity::class.java)
 
-	Column(
-		modifier = modifier.fillMaxSize(),
-		verticalArrangement = Arrangement.Center,
-		horizontalAlignment = Alignment.CenterHorizontally
-	) {
-		//context.startActivity(intent)
+	Box(modifier = modifier) {
+
+	}
+	LaunchedEffect(Unit){
+		context.startActivity(intent)
 	}
 }
 
@@ -134,9 +93,3 @@ val bottomNavItems = listOf(
 	),
 )
 
-data class BottomNavItem(
-	val title: String,
-	val route: String,
-	val selectedIcon: ImageVector,
-	val unSelectedIcon: ImageVector,
-)
