@@ -15,25 +15,25 @@ fun HomeScreenStatTrans(
 	val navController = rememberNavController()
 	NavHost(
 		navController = navController,
-		startDestination = Route.HomeListScreen,
+		startDestination = HomeRoute.ListScreen,
 	) {
-		composable<Route.HomeListScreen> {
+		composable<HomeRoute.ListScreen> {
 			HomeScreen(
 				onHomeFunctionClick = { HomeFunction ->
 					navController.navigate(
-						Route.HomeFunctionScreen(HomeFunction.name)
+						HomeRoute.FunctionScreen(HomeFunction.name)
 					)
 				},
 				//listType = listType,
 				innerPadding = innderPadding
 			)
 		}
-		composable<Route.HomeFunctionScreen> {
+		composable<HomeRoute.FunctionScreen> {
 			ScannerScreen(
 				onBackClick = { navController.popBackStack() }
 			)
 		}
-		composable<Route.HomeSendScreen> {
+		composable<HomeRoute.SendScreen> {
 			ScannerScreen(
 				onBackClick = { navController.popBackStack() }
 			)
@@ -43,17 +43,17 @@ fun HomeScreenStatTrans(
 
 
 
-object Route {
+object HomeRoute {
 	@Serializable
-	data object HomeListScreen
+	data object ListScreen
 
 	@Serializable
-	data class HomeFunctionScreen(
+	data class FunctionScreen(
 		val name: String
 	)
 
 	@Serializable
-	data class HomeSendScreen(
+	data class SendScreen(
 		val url: String
 	)
 }

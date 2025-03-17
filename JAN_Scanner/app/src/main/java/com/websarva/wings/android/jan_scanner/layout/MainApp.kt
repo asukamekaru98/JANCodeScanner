@@ -76,13 +76,13 @@ private fun SwitchTab(
 	when (selectedBottomTab) {
 		BottomTab.HOME.value -> {
 			HomeScreenStatTrans(
-				//listType= listType,
 				innderPadding = innderPadding
 			)
 		}
-
 		BottomTab.HISTORY.value -> {
-
+			PrintHistoryStatTrans(
+				innderPadding = innderPadding
+			)
 		}
 		/*
 		BottomTab.SETTING.value -> {
