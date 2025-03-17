@@ -5,12 +5,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun PrintHistoryScreenBar() {
+fun SettingScreenBar() {
 	TopAppBar(
 		title = {
-			Text("履歴")
+			Text("設定")
 		}
 	)
 }

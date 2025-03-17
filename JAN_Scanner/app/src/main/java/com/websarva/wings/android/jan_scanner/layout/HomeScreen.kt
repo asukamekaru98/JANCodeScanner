@@ -25,83 +25,92 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.websarva.wings.android.jan_scanner.R
 import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
 import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
 
-enum class ListType {
-	Column, Grid
-}
-
-/**
- * 状態遷移
- */
-@Composable
-fun HomeScreenStatTrans(
-
-){}
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun HomeScreen(
 	homeFunctions: List<HomeFunction> = HomeFunctions,
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
+	//listType: ListType,
 	innerPadding: PaddingValues
 ) {
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
 
-	var showDialog by remember { mutableStateOf(false) }
-	if (showDialog) {
-		ListTypeSelectionDialog(
-			listType = listType,
-			onConfirm = { newListType ->
-				listType = newListType
-				showDialog = false
-			},
-			onDismiss = {
-				showDialog = false
-			}
-		)
-	}
-
+	//var showDialog by remember { mutableStateOf(false) }
+	//if (showDialog) {
+	//	ListTypeSelectionDialog(
+	//		listType = listType,
+	//		onConfirm = { newListType ->
+	//			listType = newListType
+	//			showDialog = false
+	//		},
+	//		onDismiss = {
+	//			showDialog = false
+	//		}
+	//	)
+	//}
 	Scaffold(
-		topBar = {
+		topBar =
+		{
 			TopAppBar(
-				title = { Text("ホーム") },
-				actions = {
-					IconButton(onClick = { showDialog = true }) {
-						Icon(
-							painter = painterResource(R.drawable.grid_view),
-							contentDescription = "表示切り替え"
-						)
-					}
+				title =
+				{
+					Text("ホーム")
 				},
+				actions =
+				{
+					IconButton(
+						onClick =
+						{
+							listType = when (listType) {
+								ListType.Column -> ListType.Grid
+								ListType.Grid -> ListType.Column
+							}
+						}
+					)
+					{
+						// listType を key にして確実に再生成されるようにする
+						key(listType)
+						{
+							Icon(
+								painter = when (listType) {
+									ListType.Column -> painterResource(R.drawable.grid_view)
+									ListType.Grid -> painterResource(R.drawable.column_view)
+								},
+								contentDescription = "表示切り替え"
+							)
+						}
+					}
+				}
 			)
 		},
-		content = {
-			HomeScreenList(
-				listType = listType,
-				homeFunctions = homeFunctions,
-				onHomeFunctionClick = onHomeFunctionClick,
-				modifier = Modifier.padding(innerPadding)
-			)
-		},
-	) /*{ /*innerPadding ->*/
+	) { paddingValues ->
 		HomeScreenList(
 			listType = listType,
 			homeFunctions = homeFunctions,
 			onHomeFunctionClick = onHomeFunctionClick,
-			modifier = Modifier.padding(innerPadding)
+			modifier = Modifier
+				.padding(innerPadding)
+				.padding(paddingValues)
 		)
-	}*/
+	}
+
+
 }
+
 
 @Composable
 private fun HomeScreenList(
@@ -109,7 +118,7 @@ private fun HomeScreenList(
 	homeFunctions: List<HomeFunction>,
 	onHomeFunctionClick: (HomeFunction) -> Unit,
 	modifier: Modifier
-){
+) {
 	if (listType == ListType.Column) {
 		GridList(
 			homeFunctions = homeFunctions,
@@ -140,7 +149,7 @@ private fun GridList(
 						painterResource(homeFunction.icon),
 						contentDescription = null,
 						tint = MaterialTheme.colorScheme.primary,
-						modifier = Modifier.width(80.dp)
+						modifier = Modifier.width(60.dp)
 					)
 				},
 				modifier = Modifier.clickable(
@@ -163,9 +172,19 @@ private fun ColumnList(
 	LazyVerticalGrid(
 		columns = GridCells.Fixed(3),
 		verticalArrangement = Arrangement.spacedBy(10.dp),
+		horizontalArrangement = Arrangement.spacedBy(10.dp),
 		modifier = modifier
 	) {
 		items(homeFunctions) { homeFunction ->
+			//Card(
+			//	modifier = Modifier
+			//		.fillMaxWidth()
+			//		.clickable(onClickLabel = "詳細を確認する") {
+			//			onHomeFunctionClick(homeFunction)
+			//		},
+			//	elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+			//	shape = MaterialTheme.shapes.medium
+			//){
 			Column(
 				horizontalAlignment = Alignment.CenterHorizontally,
 				modifier = Modifier
@@ -181,9 +200,12 @@ private fun ColumnList(
 					modifier = Modifier
 						.fillMaxWidth()
 						.aspectRatio(1f)
+						.scale(0.9f)
+
 				)
 				Text(text = homeFunction.name)
 			}
+			//}
 		}
 	}
 }
@@ -205,7 +227,7 @@ private fun ListTypeSelectionDialog(
 		confirmButton = {
 			TextButton(
 				onClick = {
-					val newListType = when(listType) {
+					val newListType = when (listType) {
 						ListType.Column -> ListType.Grid
 						ListType.Grid -> ListType.Column
 					}
