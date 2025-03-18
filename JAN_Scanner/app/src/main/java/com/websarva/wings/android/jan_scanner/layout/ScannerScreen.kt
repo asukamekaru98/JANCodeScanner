@@ -22,7 +22,7 @@ fun ScannerScreen(
 
 @Preview
 @Composable
-private fun ScannerCamera(
+fun ScannerCamera(
 	modifier: Modifier = Modifier,
 ) {
 	val context = LocalContext.current

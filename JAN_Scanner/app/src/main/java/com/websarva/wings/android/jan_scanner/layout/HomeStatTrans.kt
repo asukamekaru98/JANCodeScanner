@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctionInterface
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -21,17 +23,26 @@ fun HomeScreenStatTrans(
 			HomeScreen(
 				onHomeFunctionClick = { HomeFunction ->
 					navController.navigate(
-						HomeRoute.FunctionScreen(HomeFunction.name)
+						HomeRoute.FunctionScreen(HomeFunction.homeFunction)
 					)
 				},
 				//listType = listType,
 				innerPadding = innderPadding
 			)
 		}
-		composable<HomeRoute.FunctionScreen> {
-			ScannerScreen(
+		composable<HomeRoute.FunctionScreen>(
+
+		) { homeBackStackEntry ->
+			val homeFunction: HomeRoute.FunctionScreen
+			= homeBackStackEntry.toRoute()
+
+			homeFunction.homeFunction.FunctionMain(
 				onBackClick = { navController.popBackStack() }
 			)
+
+
+
+			//val HomeFunction =
 		}
 		composable<HomeRoute.SendScreen> {
 			ScannerScreen(
@@ -49,7 +60,7 @@ object HomeRoute {
 
 	@Serializable
 	data class FunctionScreen(
-		val name: String
+		val homeFunction: HomeFunctionInterface
 	)
 
 	@Serializable
