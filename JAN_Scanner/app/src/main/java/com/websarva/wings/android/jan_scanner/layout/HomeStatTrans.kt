@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctionInterface
+import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -21,29 +21,23 @@ fun HomeScreenStatTrans(
 	) {
 		composable<HomeRoute.ListScreen> {
 			HomeScreen(
-				onHomeFunctionClick = { HomeFunction ->
+				onHomeFunctionClick = { homeFunction ->
 					navController.navigate(
-						HomeRoute.FunctionScreen(HomeFunction.homeFunction)
+						HomeRoute.FunctionScreen(function = homeFunction)
 					)
 				},
 				//listType = listType,
 				innerPadding = innderPadding
 			)
 		}
-		composable<HomeRoute.FunctionScreen>(
 
-		) { homeBackStackEntry ->
-			val homeFunction: HomeRoute.FunctionScreen
-			= homeBackStackEntry.toRoute()
+		composable<HomeRoute.FunctionScreen> { homeBackStackEntry ->
+			val homeFunction: HomeRoute.FunctionScreen = homeBackStackEntry.toRoute()
 
-			homeFunction.homeFunction.FunctionMain(
-				onBackClick = { navController.popBackStack() }
-			)
+			homeFunction.function { navController.popBackStack() }
 
-
-
-			//val HomeFunction =
 		}
+
 		composable<HomeRoute.SendScreen> {
 			ScannerScreen(
 				onBackClick = { navController.popBackStack() }
@@ -53,14 +47,13 @@ fun HomeScreenStatTrans(
 }
 
 
-
 object HomeRoute {
 	@Serializable
 	data object ListScreen
 
 	@Serializable
 	data class FunctionScreen(
-		val homeFunction: HomeFunctionInterface
+		val function: HomeFunction
 	)
 
 	@Serializable

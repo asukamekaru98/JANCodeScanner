@@ -5,20 +5,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctionInterface
 import com.websarva.wings.android.jan_scanner.layout.ScannerCamera
 
-class FunctionISBNScanner: HomeFunctionInterface {
-	@Composable
-	override fun FunctionMain(
-		onBackClick: () -> Unit
-	) {
-		FunctionScreen()
-	}
+@Composable
+fun ISBNScannerFuncMain(
+){
+	ISBNScannerScreen()
 }
 
 @Composable
-private fun FunctionScreen(){
+private fun ISBNScannerScreen(){
 	Scaffold(
 		topBar = {
 			Text("JANスキャナー")
