@@ -1,63 +1,94 @@
 package com.websarva.wings.android.jan_scanner.layout
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
+import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctionID
 import kotlinx.serialization.Serializable
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun HomeScreen() {
+	Scaffold(
+		topBar = {
+			TopAppBar(title = { Text("ホーム") })
+		}
+	) { innerPadding ->
+		HomeScreenStatTrans(
+			innderPadding = innerPadding
+		)
+	}
+}
+
+@Composable
 fun HomeScreenStatTrans(
-	//listType: ListType,
 	innderPadding: PaddingValues
 ) {
 	val navController = rememberNavController()
 	NavHost(
 		navController = navController,
-		startDestination = HomeRoute.ListScreen,
+		startDestination = HomeScreenRoute.ListScreen,
 	) {
-		composable<HomeRoute.ListScreen> {
-			HomeScreen(
+		// 機能メニュー
+		composable<HomeScreenRoute.ListScreen> {
+			HomeMenu(
 				onHomeFunctionClick = { homeFunction ->
 					navController.navigate(
-						HomeRoute.FunctionScreen(function = homeFunction)
+						HomeScreenRoute.FunctionScreen(id = homeFunction.id)
 					)
 				},
-				//listType = listType,
 				innerPadding = innderPadding
 			)
 		}
 
-		composable<HomeRoute.FunctionScreen> { homeBackStackEntry ->
-			val homeFunction: HomeRoute.FunctionScreen = homeBackStackEntry.toRoute()
+		// 機能画面
+		composable<HomeScreenRoute.FunctionScreen> { homeBackStackEntry ->
+			val functionScreen: HomeScreenRoute.FunctionScreen = homeBackStackEntry.toRoute()
 
-			homeFunction.function { navController.popBackStack() }
+			SwitchFunctionScreen(functionScreen.id, innderPadding)
 
 		}
+	}
+}
 
-		composable<HomeRoute.SendScreen> {
-			ScannerScreen(
-				onBackClick = { navController.popBackStack() }
+@Composable
+fun SwitchFunctionScreen(
+	id: HomeFunctionID,
+	innderPadding: PaddingValues,
+)
+{
+	when(id){
+		HomeFunctionID.JAN -> {
+			JanScreen(
+				innderPadding = innderPadding
 			)
+		}
+		HomeFunctionID.ISBN -> {
+			IsbnScreen(
+				innderPadding = innderPadding
+			)
+		}
+		else -> {
+			throw IllegalArgumentException("存在しない機能が選択されました")
 		}
 	}
 }
 
 
-object HomeRoute {
+object HomeScreenRoute {
 	@Serializable
 	data object ListScreen
 
 	@Serializable
+	//data object FunctionScreen
 	data class FunctionScreen(
-		val function: HomeFunction
-	)
-
-	@Serializable
-	data class SendScreen(
-		val url: String
+		val id: HomeFunctionID
 	)
 }

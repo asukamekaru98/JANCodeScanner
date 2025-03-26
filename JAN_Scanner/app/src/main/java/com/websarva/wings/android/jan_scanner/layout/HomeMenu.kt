@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +20,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,40 +39,22 @@ import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreen(
-	homeFunctions: List<HomeFunction> = HomeFunctions,
+fun HomeMenu(
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
-	//listType: ListType,
 	innerPadding: PaddingValues
 ) {
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
+	val homeFunctions = HomeFunctions
 
-	//var showDialog by remember { mutableStateOf(false) }
-	//if (showDialog) {
-	//	ListTypeSelectionDialog(
-	//		listType = listType,
-	//		onConfirm = { newListType ->
-	//			listType = newListType
-	//			showDialog = false
-	//		},
-	//		onDismiss = {
-	//			showDialog = false
-	//		}
-	//	)
-	//}
 	Scaffold(
-		topBar =
-		{
+		topBar = {
 			TopAppBar(
-				title =
-				{
+				title = {
 					Text("ホーム")
 				},
-				actions =
-				{
+				actions = {
 					IconButton(
-						onClick =
-						{
+						onClick = {
 							listType = when (listType) {
 								ListType.Column -> ListType.Grid
 								ListType.Grid -> ListType.Column
@@ -176,15 +156,6 @@ private fun ColumnList(
 		modifier = modifier
 	) {
 		items(homeFunctions) { homeFunction ->
-			//Card(
-			//	modifier = Modifier
-			//		.fillMaxWidth()
-			//		.clickable(onClickLabel = "詳細を確認する") {
-			//			onHomeFunctionClick(homeFunction)
-			//		},
-			//	elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-			//	shape = MaterialTheme.shapes.medium
-			//){
 			Column(
 				horizontalAlignment = Alignment.CenterHorizontally,
 				modifier = Modifier
@@ -208,36 +179,4 @@ private fun ColumnList(
 			//}
 		}
 	}
-}
-
-@Composable
-private fun ListTypeSelectionDialog(
-	listType: ListType,
-	onConfirm: (ListType) -> Unit,
-	onDismiss: () -> Unit,
-) {
-	AlertDialog(
-		text = {
-			val text = when (listType) {
-				ListType.Column -> "グリッド表示に変更しますか？"
-				ListType.Grid -> "リスト表示に変更しますか？"
-			}
-			Text(text)
-		},
-		confirmButton = {
-			TextButton(
-				onClick = {
-					val newListType = when (listType) {
-						ListType.Column -> ListType.Grid
-						ListType.Grid -> ListType.Column
-					}
-					onConfirm(newListType)
-				}
-			) { Text("はい") }
-		},
-		dismissButton = {
-			TextButton(onClick = onDismiss) { Text("いいえ") }
-		},
-		onDismissRequest = onDismiss
-	)
 }
