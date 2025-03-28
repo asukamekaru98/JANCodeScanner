@@ -1,6 +1,10 @@
 package com.websarva.wings.android.jan_scanner.layout
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,11 +12,18 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun IsbnScreen(
-	innderPadding: PaddingValues
+	//innderPadding: PaddingValues
 )
 {
-	IsbnScreenStatTrans(innderPadding)
+	Scaffold(
+		topBar = {
+			TopAppBar(title = { Text("JANスキャナー") })
+		}
+	) { innerPadding ->
+		IsbnScreenStatTrans(innerPadding)
+	}
 }
 
 @Composable
@@ -25,15 +36,25 @@ fun IsbnScreenStatTrans(
 		startDestination = IsbnScreenRoute.ScannerScreen,
 	) {
 		composable<IsbnScreenRoute.ScannerScreen> {
-			//ISBNScannerFuncMain(
-			//	//onBackClick = { navController.popBackStack() }
-			//)
+			NextBackButton(
+				onBackClick = {
+					navController.popBackStack()
+				},
+				onNextClick = {
+					navController.navigate(IsbnScreenRoute.SendScreen)
+				}
+			)
 		}
 
 		composable<IsbnScreenRoute.SendScreen> {
-			//SendScreen(
-			//	onBackClick = { navController.popBackStack() }
-			//)
+			NextBackButton(
+				onBackClick = {
+					navController.popBackStack()
+				},
+				onNextClick = {
+					navController.navigate(IsbnScreenRoute.SendScreen)
+				}
+			)
 		}
 	}
 }
@@ -44,7 +65,8 @@ object IsbnScreenRoute {
 	data object ScannerScreen
 
 	@Serializable
-	data class SendScreen(
-		val url: String
-	)
+	data object SendScreen
+	//data class SendScreen(
+	//	val url: String
+	//)
 }

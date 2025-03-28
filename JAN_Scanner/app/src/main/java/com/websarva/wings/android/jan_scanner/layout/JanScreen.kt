@@ -1,6 +1,11 @@
 package com.websarva.wings.android.jan_scanner.layout
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,11 +13,22 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun JanScreen(
-	innderPadding: PaddingValues
+	//innderPadding: PaddingValues
 )
 {
-	JanScreenStatTrans(innderPadding)
+	Log.d("JanScreen", "JanScreen")
+
+	Scaffold(
+		topBar = {
+			TopAppBar(title = { Text("JANスキャナー") })
+		}
+	){innerPadding->
+		JanScreenStatTrans(innerPadding)
+	}
+
+
 }
 
 @Composable
@@ -22,18 +38,32 @@ fun JanScreenStatTrans(
 	val navController = rememberNavController()
 	NavHost(
 		navController = navController,
-		startDestination = IsbnScreenRoute.ScannerScreen,
+		startDestination = JanScreenRoute.ScannerScreen,
 	) {
-		composable<IsbnScreenRoute.ScannerScreen> {
-			//ISBNScannerFuncMain(
-			//	//onBackClick = { navController.popBackStack() }
-			//)
+		composable<JanScreenRoute.ScannerScreen> {
+			Log.d("JanScreenStatTrans", "ScannerScreen")
+
+			NextBackButton(
+				onBackClick = {
+					navController.popBackStack()
+				},
+				onNextClick = {
+					navController.navigate(JanScreenRoute.SendScreen)
+				}
+			)
 		}
 
-		composable<IsbnScreenRoute.SendScreen> {
-			//SendScreen(
-			//	onBackClick = { navController.popBackStack() }
-			//)
+		composable<JanScreenRoute.SendScreen> {
+			Log.d("JanScreenStatTrans", "SendScreen")
+
+			NextBackButton(
+				onBackClick = {
+					navController.popBackStack()
+				},
+				onNextClick = {
+					navController.navigate(JanScreenRoute.SendScreen)
+				}
+			)
 		}
 	}
 }
@@ -44,7 +74,8 @@ object JanScreenRoute {
 	data object ScannerScreen
 
 	@Serializable
-	data class SendScreen(
-		val url: String
-	)
+	data object SendScreen
+	//data class SendScreen(
+	//	val url: String
+	//)
 }

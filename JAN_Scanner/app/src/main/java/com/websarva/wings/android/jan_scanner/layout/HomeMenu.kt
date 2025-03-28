@@ -1,9 +1,9 @@
 package com.websarva.wings.android.jan_scanner.layout
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,8 +41,10 @@ import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeMenu(
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
-	innerPadding: PaddingValues
+	//innerPadding: PaddingValues
 ) {
+	Log.d("HomeMenu", "HomeMenu")
+
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
 	val homeFunctions = HomeFunctions
 
@@ -77,14 +79,14 @@ fun HomeMenu(
 				}
 			)
 		},
-	) { paddingValues ->
+	) { innerPadding ->
 		HomeScreenList(
 			listType = listType,
 			homeFunctions = homeFunctions,
 			onHomeFunctionClick = onHomeFunctionClick,
 			modifier = Modifier
+				//.padding(innerPadding)
 				.padding(innerPadding)
-				.padding(paddingValues)
 		)
 	}
 
@@ -123,7 +125,7 @@ private fun GridList(
 	LazyColumn(modifier = modifier) {
 		items(homeFunctions) { homeFunction ->
 			ListItem(
-				headlineContent = { Text(homeFunction.name) },
+				headlineContent = { Text(homeFunction.title) },
 				leadingContent = {
 					Icon(
 						painterResource(homeFunction.icon),
@@ -174,7 +176,7 @@ private fun ColumnList(
 						.scale(0.9f)
 
 				)
-				Text(text = homeFunction.name)
+				Text(text = homeFunction.title)
 			}
 			//}
 		}

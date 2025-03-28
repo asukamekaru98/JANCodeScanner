@@ -15,7 +15,6 @@ fun ScannerScreen(
 	onBackClick: () -> Unit,
 ) {
 
-
 }
 
 
