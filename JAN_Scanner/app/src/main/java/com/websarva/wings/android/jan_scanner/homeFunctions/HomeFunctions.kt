@@ -6,34 +6,21 @@ import com.websarva.wings.android.jan_scanner.R
 import com.websarva.wings.android.jan_scanner.layout.IsbnScreen
 import com.websarva.wings.android.jan_scanner.layout.JanScreen
 
-enum class HomeFunctionID(val value: Int) {
-	JAN(0),
-	ISBN(1),
-	WEATHER(2),
-	HOGE(1)
-}
+enum class HomeFunctionID {
+	JAN,
+	ISBN,
+	WEATHER,
+	HOGE;
 
-object HomeFunctionRoute {
-	const val ListScreen = "list"
-	const val FunctionScreen = "function/{id}"
-	const val WeatherScreen = "weather"
-	const val IsbnScreen = "isbn"
-	const val JanScreen = "jan"
-	const val HogeScreen = "hoge"
-	const val SendScreen = "send"
-	const val ScannerScreen = "scanner"
-	const val ResultScreen = "result"
-	const val SettingScreen = "setting"
-	const val HelpScreen = "help"
-	const val AboutScreen = "about"
-	const val LogScreen = "log"
+	// このロジックで、ユニークな値にしている
+	val value: Int
+		get() = this.ordinal
 }
-
 
 data class HomeFunction(
 	val id: HomeFunctionID,
-	val title: String,   // 機能名
-	@DrawableRes val icon: Int, // 選択中のアイコン画像
+	val title: String,
+	@DrawableRes val icon: Int,
 	val content: @Composable () -> Unit
 )
 
@@ -55,7 +42,7 @@ val HomeFunctions = listOf(
 	//	title = "天気",
 	//	icon = R.drawable.icon_weather
 	//),
-)
+).groupBy { it.id }.toSortedMap()
 
 @Composable
 fun HomeFunction(

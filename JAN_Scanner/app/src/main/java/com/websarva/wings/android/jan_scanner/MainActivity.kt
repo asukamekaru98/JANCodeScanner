@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
 import com.websarva.wings.android.jan_scanner.layout.HomeScreen
 import com.websarva.wings.android.jan_scanner.ui.theme.JAN_ScannerTheme
 
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
 		enableEdgeToEdge()
 		setContent {
 			JAN_ScannerTheme {
-				HomeScreen()
+				HomeScreen(homeFunctions = HomeFunctions)
 			}
 		}
 	}
