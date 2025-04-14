@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.websarva.wings.android.jan_scanner.R
 import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
+import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
 import java.util.SortedMap
 
 enum class ListType {
@@ -43,7 +44,7 @@ enum class ListType {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeMenu(
-	homeFunctions: SortedMap<String, List<HomeFunction>>,
+	homeFunctions: SortedMap<String, List<HomeFunction>> = HomeFunctions,
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
 	//innerPadding: PaddingValues
 ) {
