@@ -1,9 +1,9 @@
 package com.websarva.wings.android.jan_scanner.layout
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -46,13 +45,47 @@ enum class ListType {
 fun HomeMenu(
 	homeFunctions: SortedMap<String, List<HomeFunction>> = HomeFunctions,
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
-	//innerPadding: PaddingValues
+	innerPadding: PaddingValues
 ) {
-	Log.d("HomeMenu", "HomeMenu")
-
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
 	//val homeFunctions = HomeFunctions
-
+	TopAppBar(
+		title = {
+			Text("ホーム")
+		},
+		actions = {
+			IconButton(
+				onClick = {
+					listType = when (listType) {
+						ListType.Column -> ListType.Grid
+						ListType.Grid -> ListType.Column
+					}
+				}
+			)
+			{
+				// listType を key にして確実に再生成されるようにする
+				key(listType)
+				{
+					Icon(
+						painter = when (listType) {
+							ListType.Column -> painterResource(R.drawable.grid_view)
+							ListType.Grid -> painterResource(R.drawable.column_view)
+						},
+						contentDescription = "表示切り替え"
+					)
+				}
+			}
+		}
+	)
+	HomeScreenList(
+		listType = listType,
+		homeFunctions = homeFunctions,
+		onHomeFunctionClick = onHomeFunctionClick,
+		modifier = Modifier
+			//.padding(innerPadding)
+			.padding(innerPadding)
+	)
+/*
 	Scaffold(
 		topBar = {
 			TopAppBar(
@@ -95,6 +128,7 @@ fun HomeMenu(
 		)
 	}
 
+ */
 
 }
 

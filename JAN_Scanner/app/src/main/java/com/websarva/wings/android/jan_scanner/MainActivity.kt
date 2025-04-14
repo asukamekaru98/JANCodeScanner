@@ -4,18 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -68,18 +67,18 @@ enum class MainScreenTab(
 	val label: String
 ) {
 	Home(
-		id = "main/home",
+		id = "home/home",
 		icon = Icons.Default.Home,
 		label = "Home"
 	),
 	List(
-		id = "main/list",
-		icon = Icons.Default.Search,
-		label = "List"
+		id = "home/favorite",
+		icon = Icons.Default.Favorite,
+		label = "Favorite"
 	),
 	Settings(
-		id = "main/about",
-		icon = Icons.Default.Person,
+		id = "home/about",
+		icon = Icons.Default.Info,
 		label = "About"
 	)
 }
@@ -90,8 +89,15 @@ fun HomeScreen() {
 	val nestedNavController = rememberNavController()
 	val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
 	val currentTab = navBackStackEntry?.destination?.route
-	//var selectedItem by remember { mutableIntStateOf(0) }
+
 	Scaffold(
+		//topBar = {
+		//	TopAppBar(
+		//		title = {
+		//			Text("ホーム")
+		//		},
+		//	)
+		//},
 		bottomBar = {
 			NavigationBar {
 				MainScreenTab.entries.forEachIndexed { index, item ->
@@ -104,25 +110,78 @@ fun HomeScreen() {
 				}
 			}
 		}
-	) {
+	) { innerPadding ->
+		NavHost(
+			navController = nestedNavController,
+			startDestination = "home/home",
+			modifier = Modifier,
+		) {
+			composable("home/home") {
+				HomeMenu(innerPadding = innerPadding)
+			}
+			composable("home/favorite") {
+				//HomeMenu(innerPadding)
+				TopAppBar(
+					title = {
+						Text("home/favorite")
+					}
+				)
+
+			}
+			composable("home/about") {
+				TopAppBar(
+					title = {
+						Text("home/about")
+					},
+				)
+			}
+		}
+		/*
 		Box(modifier = Modifier.padding(it)) {
-			NavHost(
-				navController = nestedNavController,
-				startDestination = "main/home",
-				modifier = Modifier,
+
+			var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+			Column(
+				modifier = Modifier
+					.fillMaxSize()
+					.background(Color.White)
 			) {
-				composable("main/home") {
-					Text("main/home")
-				}
-				composable("main/list") {
-					HomeMenu()
-				// Text("main/list")
-				}
-				composable("main/about") {
-					Text("main/about")
+				//TabRow(selectedTabIndex = selectedTabIndex) {
+				//	MainScreenTab.entries.forEachIndexed { index, item ->
+				//		LeadingIconTab(
+				//			selected = index == selectedTabIndex,
+				//			onClick = {
+				//				selectedTabIndex = index
+				//				nestedNavController.navigate(item.id)
+				//			},
+				//			text = {
+				//				Text(text = item.label)
+				//			},
+				//			icon = { Icon(item.icon, contentDescription = item.label) },
+				//		)
+				//	}
+				//}
+
+				NavHost(
+					navController = nestedNavController,
+					startDestination = "main/home",
+					modifier = Modifier,
+				) {
+					composable("main/home") {
+						HomeMenu()
+					}
+					composable("main/list") {
+						HomeMenu()
+						// Text("main/list")
+					}
+					composable("main/about") {
+						Text("main/about")
+					}
 				}
 			}
 		}
+
+		 */
 	}
 }
 
