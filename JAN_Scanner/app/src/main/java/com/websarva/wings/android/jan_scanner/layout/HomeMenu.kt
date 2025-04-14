@@ -34,19 +34,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.websarva.wings.android.jan_scanner.R
 import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
+import java.util.SortedMap
 
+enum class ListType {
+	Column, Grid
+}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeMenu(
+	homeFunctions: SortedMap<String, List<HomeFunction>>,
 	onHomeFunctionClick: (HomeFunction) -> Unit = {},
 	//innerPadding: PaddingValues
 ) {
 	Log.d("HomeMenu", "HomeMenu")
 
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
-	val homeFunctions = HomeFunctions
+	//val homeFunctions = HomeFunctions
 
 	Scaffold(
 		topBar = {
@@ -97,7 +101,7 @@ fun HomeMenu(
 @Composable
 private fun HomeScreenList(
 	listType: ListType,
-	homeFunctions: List<HomeFunction>,
+	homeFunctions: SortedMap<String, List<HomeFunction>>,
 	onHomeFunctionClick: (HomeFunction) -> Unit,
 	modifier: Modifier
 ) {
@@ -118,28 +122,30 @@ private fun HomeScreenList(
 
 @Composable
 private fun GridList(
-	homeFunctions: List<HomeFunction>,
+	homeFunctions: SortedMap<String, List<HomeFunction>>,
 	onHomeFunctionClick: (HomeFunction) -> Unit,
 	modifier: Modifier = Modifier,
 ) {
 	LazyColumn(modifier = modifier) {
-		items(homeFunctions) { homeFunction ->
-			ListItem(
-				headlineContent = { Text(homeFunction.title) },
-				leadingContent = {
-					Icon(
-						painterResource(homeFunction.icon),
-						contentDescription = null,
-						tint = MaterialTheme.colorScheme.primary,
-						modifier = Modifier.width(60.dp)
-					)
-				},
-				modifier = Modifier.clickable(
-					onClickLabel = "",
-				) {
-					onHomeFunctionClick(homeFunction)
-				}
-			)
+		for ((id, list) in homeFunctions) {
+			items(list) { homeFunction ->
+				ListItem(
+					headlineContent = { Text(homeFunction.title) },
+					leadingContent = {
+						Icon(
+							painterResource(homeFunction.icon),
+							contentDescription = null,
+							tint = MaterialTheme.colorScheme.primary,
+							modifier = Modifier.width(60.dp)
+						)
+					},
+					modifier = Modifier.clickable(
+						onClickLabel = "",
+					) {
+						onHomeFunctionClick(homeFunction)
+					}
+				)
+			}
 		}
 	}
 
@@ -147,7 +153,7 @@ private fun GridList(
 
 @Composable
 private fun ColumnList(
-	homeFunctions: List<HomeFunction>,
+	homeFunctions:  SortedMap<String, List<HomeFunction>>,
 	onHomeFunctionClick: (HomeFunction) -> Unit,
 	modifier: Modifier
 ) {
@@ -157,28 +163,31 @@ private fun ColumnList(
 		horizontalArrangement = Arrangement.spacedBy(10.dp),
 		modifier = modifier
 	) {
-		items(homeFunctions) { homeFunction ->
-			Column(
-				horizontalAlignment = Alignment.CenterHorizontally,
-				modifier = Modifier
-					.fillMaxWidth()
-					.clickable(onClickLabel = "詳細を確認する") {
-						onHomeFunctionClick(homeFunction)
-					}
-			) {
-				Icon(
-					painterResource(homeFunction.icon),
-					contentDescription = null,
-					tint = MaterialTheme.colorScheme.primary,
+		for ((id, list) in homeFunctions) {
+
+			items(list) { homeFunction ->
+				Column(
+					horizontalAlignment = Alignment.CenterHorizontally,
 					modifier = Modifier
 						.fillMaxWidth()
-						.aspectRatio(1f)
-						.scale(0.9f)
+						.clickable(onClickLabel = "詳細を確認する") {
+							onHomeFunctionClick(homeFunction)
+						}
+				) {
+					Icon(
+						painterResource(homeFunction.icon),
+						contentDescription = null,
+						tint = MaterialTheme.colorScheme.primary,
+						modifier = Modifier
+							.fillMaxWidth()
+							.aspectRatio(1f)
+							.scale(0.9f)
 
-				)
-				Text(text = homeFunction.title)
+					)
+					Text(text = homeFunction.title)
+				}
+				//}
 			}
-			//}
 		}
 	}
 }

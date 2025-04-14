@@ -94,6 +94,7 @@ dependencies {
 	implementation(libs.kotlinx.serialization.json)
 
 	implementation(libs.coilcompose)
+	implementation(libs.leadingIconTab)
 
 	testImplementation(libs.junit)
 

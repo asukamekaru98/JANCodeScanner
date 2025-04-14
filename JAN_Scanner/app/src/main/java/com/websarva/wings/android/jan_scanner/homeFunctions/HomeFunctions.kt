@@ -7,6 +7,7 @@ import com.websarva.wings.android.jan_scanner.layout.IsbnScreen
 import com.websarva.wings.android.jan_scanner.layout.JanScreen
 
 enum class HomeFunctionID {
+	HOME,
 	JAN,
 	ISBN,
 	WEATHER,
@@ -17,24 +18,26 @@ enum class HomeFunctionID {
 		get() = this.ordinal
 }
 
+
 data class HomeFunction(
-	val id: HomeFunctionID,
-	val title: String,
+	/*val id: HomeFunctionID,*/
 	@DrawableRes val icon: Int,
+	val title: String,
+	val route: String,
 	val content: @Composable () -> Unit
 )
 
 val HomeFunctions = listOf(
 	HomeFunction(
-		id = HomeFunctionID.JAN,
-		title = "JANスキャナー",
 		icon = R.drawable.icon_barcode,
+		title = "JANスキャナー",
+		route = HomeFunctionID.JAN.toString(),
 		content = { JanScreen() }
 	),
 	HomeFunction(
-		id = HomeFunctionID.ISBN,
-		title = "ISBNスキャナー",
 		icon = R.drawable.icon_book,
+		title = "ISBNスキャナー",
+		route = HomeFunctionID.ISBN.toString(),
 		content = { IsbnScreen() }
 	),
 	//HomeFunction(
@@ -42,12 +45,4 @@ val HomeFunctions = listOf(
 	//	title = "天気",
 	//	icon = R.drawable.icon_weather
 	//),
-).groupBy { it.id }.toSortedMap()
-
-@Composable
-fun HomeFunction(
-	name: String,
-
-	) {
-
-}
+).groupBy { it.route }.toSortedMap()

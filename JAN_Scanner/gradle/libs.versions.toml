@@ -11,6 +11,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2024.04.01"
+leadingIconTab = "1.8.0-rc03"
 navigation = "2.8.3"
 serialization = "1.7.3"
 kotlinxSerialization = "1.6.0"
@@ -39,6 +40,7 @@ ktlint = "1.3.1"
 coilcompose = "2.4.0"
 
 [libraries]
+leadingIconTab = { module = "androidx.compose.material:material", version.ref = "leadingIconTab" }
 kotlinStdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlinxCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
