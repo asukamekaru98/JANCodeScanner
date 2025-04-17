@@ -1,5 +1,6 @@
 package com.websarva.wings.android.jan_scanner.layout
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -17,6 +18,7 @@ fun IsbnScreen(
 	//innderPadding: PaddingValues
 )
 {
+	Log.d("JanScreenStatTrans", "ISBN")
 	Scaffold(
 		topBar = {
 			TopAppBar(title = { Text("JANスキャナー") })

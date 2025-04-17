@@ -32,9 +32,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.websarva.wings.android.jan_scanner.R
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunction
-import com.websarva.wings.android.jan_scanner.homeFunctions.HomeFunctions
-import java.util.SortedMap
+import com.websarva.wings.android.jan_scanner.data.AppSectionInterface
+import com.websarva.wings.android.jan_scanner.data.MenuSection
 
 enum class ListType {
 	Column, Grid
@@ -43,12 +42,11 @@ enum class ListType {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeMenu(
-	homeFunctions: SortedMap<String, List<HomeFunction>> = HomeFunctions,
-	onHomeFunctionClick: (HomeFunction) -> Unit = {},
+	onListClick: (AppSectionInterface) -> Unit = {},
 	innerPadding: PaddingValues
 ) {
 	var listType by rememberSaveable { mutableStateOf(ListType.Column) }
-	//val homeFunctions = HomeFunctions
+
 	TopAppBar(
 		title = {
 			Text("ホーム")
@@ -79,13 +77,13 @@ fun HomeMenu(
 	)
 	HomeScreenList(
 		listType = listType,
-		homeFunctions = homeFunctions,
-		onHomeFunctionClick = onHomeFunctionClick,
+		functions = MenuSection.entries,
+		onListClick = onListClick,
 		modifier = Modifier
 			//.padding(innerPadding)
 			.padding(innerPadding)
 	)
-/*
+	/*
 	Scaffold(
 		topBar = {
 			TopAppBar(
@@ -136,20 +134,20 @@ fun HomeMenu(
 @Composable
 private fun HomeScreenList(
 	listType: ListType,
-	homeFunctions: SortedMap<String, List<HomeFunction>>,
-	onHomeFunctionClick: (HomeFunction) -> Unit,
+	functions: List<AppSectionInterface>,
+	onListClick: (AppSectionInterface) -> Unit,
 	modifier: Modifier
 ) {
 	if (listType == ListType.Column) {
 		GridList(
-			homeFunctions = homeFunctions,
-			onHomeFunctionClick = onHomeFunctionClick,
+			functions = functions,
+			onListClick = onListClick,
 			modifier = modifier
 		)
 	} else {
 		ColumnList(
-			homeFunctions = homeFunctions,
-			onHomeFunctionClick = onHomeFunctionClick,
+			functions = functions,
+			onListClick = onListClick,
 			modifier = modifier
 		)
 	}
@@ -157,18 +155,18 @@ private fun HomeScreenList(
 
 @Composable
 private fun GridList(
-	homeFunctions: SortedMap<String, List<HomeFunction>>,
-	onHomeFunctionClick: (HomeFunction) -> Unit,
+	functions: List<AppSectionInterface>,
+	onListClick: (AppSectionInterface) -> Unit,
 	modifier: Modifier = Modifier,
 ) {
 	LazyColumn(modifier = modifier) {
-		for ((id, list) in homeFunctions) {
-			items(list) { homeFunction ->
+
+			items(functions) { section ->
 				ListItem(
-					headlineContent = { Text(homeFunction.title) },
+					headlineContent = { Text(section.title) },
 					leadingContent = {
 						Icon(
-							painterResource(homeFunction.icon),
+							imageVector = section.icon,
 							contentDescription = null,
 							tint = MaterialTheme.colorScheme.primary,
 							modifier = Modifier.width(60.dp)
@@ -177,19 +175,19 @@ private fun GridList(
 					modifier = Modifier.clickable(
 						onClickLabel = "",
 					) {
-						onHomeFunctionClick(homeFunction)
+						onListClick(section)
 					}
 				)
 			}
-		}
+
 	}
 
 }
 
 @Composable
 private fun ColumnList(
-	homeFunctions:  SortedMap<String, List<HomeFunction>>,
-	onHomeFunctionClick: (HomeFunction) -> Unit,
+	functions: List<AppSectionInterface>,
+	onListClick: (AppSectionInterface) -> Unit,
 	modifier: Modifier
 ) {
 	LazyVerticalGrid(
@@ -198,19 +196,17 @@ private fun ColumnList(
 		horizontalArrangement = Arrangement.spacedBy(10.dp),
 		modifier = modifier
 	) {
-		for ((id, list) in homeFunctions) {
-
-			items(list) { homeFunction ->
+			items(functions) { section ->
 				Column(
 					horizontalAlignment = Alignment.CenterHorizontally,
 					modifier = Modifier
 						.fillMaxWidth()
 						.clickable(onClickLabel = "詳細を確認する") {
-							onHomeFunctionClick(homeFunction)
+							onListClick(section)
 						}
 				) {
 					Icon(
-						painterResource(homeFunction.icon),
+						imageVector = section.icon,
 						contentDescription = null,
 						tint = MaterialTheme.colorScheme.primary,
 						modifier = Modifier
@@ -219,10 +215,9 @@ private fun ColumnList(
 							.scale(0.9f)
 
 					)
-					Text(text = homeFunction.title)
+					Text(text = section.title)
 				}
-				//}
 			}
-		}
+
 	}
 }

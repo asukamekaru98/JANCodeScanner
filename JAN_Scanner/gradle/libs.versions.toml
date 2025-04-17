@@ -12,6 +12,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2024.04.01"
 leadingIconTab = "1.8.0-rc03"
+material3 = "1.4.0-alpha12"
 navigation = "2.8.3"
 serialization = "1.7.3"
 kotlinxSerialization = "1.6.0"
@@ -72,6 +73,7 @@ androidxConstraintLayout = { group = "androidx.constraintlayout", name = "constr
 androidxCameraView = { group = "androidx.camera", name = "camera-view", version.ref = "androidxCamera" }
 androidxCameraCamera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "androidxCamera" }
 androidxCameraLifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidxCamera" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 mlkitBarcodeScanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcodeScanning" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 playReview = { group = "com.google.android.play", name = "review-ktx", version.ref = "playReview" }

@@ -4,10 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -18,7 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -27,7 +23,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.websarva.wings.android.jan_scanner.data.HomeSection
 import com.websarva.wings.android.jan_scanner.layout.HomeMenu
+import com.websarva.wings.android.jan_scanner.layout.IsbnScreenStatTrans
+import com.websarva.wings.android.jan_scanner.layout.JanScreen
 import com.websarva.wings.android.jan_scanner.ui.theme.JAN_ScannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,129 +60,70 @@ private fun NavGraphBuilder.homeScreen() {
 	}
 }
 
-enum class MainScreenTab(
-	val id: String,
-	val icon: ImageVector,
-	val label: String
-) {
-	Home(
-		id = "home/home",
-		icon = Icons.Default.Home,
-		label = "Home"
-	),
-	List(
-		id = "home/favorite",
-		icon = Icons.Default.Favorite,
-		label = "Favorite"
-	),
-	Settings(
-		id = "home/about",
-		icon = Icons.Default.Info,
-		label = "About"
-	)
-}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-	val nestedNavController = rememberNavController()
-	val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
-	val currentTab = navBackStackEntry?.destination?.route
+	val navController = rememberNavController()
+	val backStack by navController.currentBackStackEntryAsState()
+	val currentRoute = backStack?.destination?.route
+
+	// Home/Favorite/About のみボトムバー表示
+	val showBottomBar = HomeSection.entries.any { it.id == currentRoute }
 
 	Scaffold(
-		//topBar = {
-		//	TopAppBar(
-		//		title = {
-		//			Text("ホーム")
-		//		},
-		//	)
-		//},
 		bottomBar = {
-			NavigationBar {
-				MainScreenTab.entries.forEachIndexed { index, item ->
-					NavigationBarItem(
-						icon = { Icon(item.icon, contentDescription = item.label) },
-						label = { Text(item.label) },
-						selected = currentTab == item.id,
-						onClick = { nestedNavController.navigate(item.id) }
-					)
+			if (showBottomBar) {
+				NavigationBar {
+					HomeSection.entries.forEach { tab ->
+						NavigationBarItem(
+							icon = { Icon(tab.icon, contentDescription = tab.title) },
+							label = { Text(tab.title) },
+							selected = currentRoute == tab.id,
+							onClick = { navController.navigate(tab.id) }
+						)
+					}
 				}
 			}
 		}
 	) { innerPadding ->
 		NavHost(
-			navController = nestedNavController,
-			startDestination = "home/home",
-			modifier = Modifier,
+			navController = navController,
+			startDestination = HomeSection.HomeMenu.id,  // "home/home"
+			modifier = Modifier.padding(innerPadding)
 		) {
-			composable("home/home") {
-				HomeMenu(innerPadding = innerPadding)
-			}
-			composable("home/favorite") {
-				//HomeMenu(innerPadding)
-				TopAppBar(
-					title = {
-						Text("home/favorite")
+			// ─── Home メニュー
+			composable(HomeSection.HomeMenu.id) { // "home/home"
+				HomeMenu(
+					innerPadding = innerPadding,
+					onListClick = { hf ->
+						// HomeFunction.route は "JAN"／"ISBN" なので小文字化
+						navController.navigate(hf.id)
 					}
 				)
-
 			}
-			composable("home/about") {
-				TopAppBar(
-					title = {
-						Text("home/about")
-					},
-				)
+
+			// ─── Favorite / About
+			composable(HomeSection.HomeFavorite.id) {
+				TopAppBar(title = { Text("お気に入り") })
 			}
-		}
-		/*
-		Box(modifier = Modifier.padding(it)) {
+			composable(HomeSection.HomeAbout.id) {
+				TopAppBar(title = { Text("About") })
+			}
 
-			var selectedTabIndex by remember { mutableIntStateOf(0) }
-
-			Column(
-				modifier = Modifier
-					.fillMaxSize()
-					.background(Color.White)
-			) {
-				//TabRow(selectedTabIndex = selectedTabIndex) {
-				//	MainScreenTab.entries.forEachIndexed { index, item ->
-				//		LeadingIconTab(
-				//			selected = index == selectedTabIndex,
-				//			onClick = {
-				//				selectedTabIndex = index
-				//				nestedNavController.navigate(item.id)
-				//			},
-				//			text = {
-				//				Text(text = item.label)
-				//			},
-				//			icon = { Icon(item.icon, contentDescription = item.label) },
-				//		)
-				//	}
-				//}
-
-				NavHost(
-					navController = nestedNavController,
-					startDestination = "main/home",
-					modifier = Modifier,
-				) {
-					composable("main/home") {
-						HomeMenu()
-					}
-					composable("main/list") {
-						HomeMenu()
-						// Text("main/list")
-					}
-					composable("main/about") {
-						Text("main/about")
-					}
-				}
+			// ─── JAN／ISBN 画面（ボトムバーは非表示）
+			composable("home/menu/jan") {
+				JanScreen(innerPadding)
+			}
+			composable("home/menu/isbn") {
+				IsbnScreenStatTrans(innerPadding)
 			}
 		}
-
-		 */
 	}
 }
+
 
 @Preview(showBackground = true)
 @Composable
